@@ -1,6 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
+import { SunIcon, MoonIcon } from "@heroicons/react/solid";
 
 export async function getStaticProps() {
   const supabaseAdmin = createClient(
@@ -31,7 +33,7 @@ type Image = {
 
 export default function Gallery({ images }: { images: Image[] }) {
   return (
-    <div className="text-center mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+    <div className="text-center mx-auto max-w-2xl py-16 px-4 sm:py-18 sm:px-6 lg:max-w-7xl lg:px-8">
       <Header />
       <div className="text-left grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
         {images.map((image) => (
@@ -62,19 +64,44 @@ function BlurImage({ image }: { image: Image }) {
           onLoadingComplete={() => setIsLoading(false)}
         />
       </div>
-      <h3 className="mt-4 text-sm text-gray-700">{image.name}</h3>
-      <p className="mt-1 text-lg font-medium text-gray-900">{image.username}</p>
+      <h3 className="mt-4 text-sm text-gray-700 dark:text-white">{image.name}</h3>
+      <p className="mt-1 text-lg font-medium text-gray-900 dark:text-white">{image.username}</p>
     </a>
   );
 }
 
 function Header() {
+  const { systemTheme, theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
+
   return (
     <div className="mb-10 space-y-1">
+      {mounted && (
+        <>
+          {theme === "dark" ? (
+            <div className="text-xl">
+              <SunIcon
+                className="p-1.5 w-9 h-9 rounded transition ring-textList	 hover:ring cursor-pointer"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              />
+            </div>
+          ) : (
+            <MoonIcon
+              className="p-1.5 w-9 h-9 rounded transition ring-textList hover:ring cursor-pointer"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            />
+          )}
+        </>
+      )}
       <h1 className="text-green-600 text-3xl font-semibold font-poppins">
         Supabase Image Gallery
       </h1>
-      <p className="font-noto-sans italic text-gray-400">...with lazy loading & ISR</p>
+      <p className="font-noto-sans italic text-gray-400">
+        ...with lazy loading & ISR
+      </p>
     </div>
   );
 }
