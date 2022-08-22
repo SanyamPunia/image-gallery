@@ -2,7 +2,7 @@
 
 Loads very efficient and optimized images fetched directly from Supabase alongside **Lazy Loading**
 
-- [Hosted Demo](image-gallery-kohl-three.vercel.app)
+- [Hosted Demo](https://image-gallery-kohl-three.vercel.app/)
 
 ## 🤼 Team Members
 
